@@ -1,13 +1,14 @@
+package com.example.apitesting.data.api
 
-import com.example.testingapp.data.model.ApiResponse
+import com.example.apitesting.data.model.ApiResponse
+import com.example.testingapp.utils.Constants
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface TestingApi
 {
+
 
     @GET("user/all")
     suspend fun searchUser
@@ -28,4 +29,4 @@ interface TestingApi
             : Response<ApiResponse>
 
 
-} /// TestingAPi closed
+}
