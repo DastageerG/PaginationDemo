@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.apitesting.adapter.LoadingStateAdapter
 import com.example.apitesting.adapter.UserAdapter
 import com.example.apitesting.data.model.ApiResponse
 import com.example.apitesting.databinding.ActivityMainBinding
@@ -35,7 +36,9 @@ class MainActivity : AppCompatActivity()
         {
 
             recycleViewMain.layoutManager = LinearLayoutManager(applicationContext)
-            recycleViewMain.adapter = adapter
+            recycleViewMain.adapter = adapter.withLoadStateFooter(LoadingStateAdapter())
+
+
             recycleViewMain.addItemDecoration(
                     DividerItemDecoration(
                             applicationContext,
@@ -46,14 +49,24 @@ class MainActivity : AppCompatActivity()
 
 
 
-        viewModel.searchUser(50,1,"a")
-        viewModel.userResponse.observe({lifecycle})
+//        viewModel.searchUser(50,1,"a")
+//        viewModel.userResponse.observe({lifecycle})
+//        {
+//            it.let()
+//            {
+//                getUserData(it)
+//            } // it
+//        } // viewModel
+
+
+
+        viewModel.users.observe({lifecycle})
         {
-            it.let()
-            {
-                getUserData(it)
-            } // it
-        } // viewModel
+            adapter.submitData(lifecycle,it)
+            Log.d(TAG, "onCreate: "+it)
+        }
+
+
 
 
     } // onCreate closed
@@ -67,7 +80,7 @@ class MainActivity : AppCompatActivity()
                 hideProgressBar()
                 response.data?.data?.users.let()
                 {
-                    adapter.submitList(it)
+                  //  adapter.submitList(it)
                 } // response closed
             } // is Success closed
 

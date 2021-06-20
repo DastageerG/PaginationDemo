@@ -2,13 +2,14 @@ package com.example.apitesting.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apitesting.data.model.User
 import com.example.apitesting.databinding.LayoutUsersListBinding
 
-class UserAdapter : ListAdapter<User, UserAdapter.ViewHolder>
+class UserAdapter : PagingDataAdapter<User, UserAdapter.ViewHolder>
     (
 
     object : DiffUtil.ItemCallback<User>()
