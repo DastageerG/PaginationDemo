@@ -8,6 +8,8 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apitesting.databinding.LayoutFooterLoadStateBinding
 
+
+// this is footer of the recycleView it will show the progress bar while scrolling
 class LoadingStateAdapter() : LoadStateAdapter<LoadingStateAdapter.ViewHolder>()
 
 {

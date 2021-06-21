@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface TestingApi
 {
 
-
+    // search a user with query
     @GET("user/all")
     suspend fun searchUser
     (
@@ -20,6 +20,7 @@ interface TestingApi
     : Response<ApiResponse>
 
 
+    // we will use it to show all users without query
     @GET("user/all")
     suspend fun getAllUsers
                 (
@@ -29,4 +30,4 @@ interface TestingApi
             : Response<ApiResponse>
 
 
-}
+} // TestingApi

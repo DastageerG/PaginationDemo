@@ -32,83 +32,33 @@ class MainActivity : AppCompatActivity()
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+
                 binding.apply()
         {
 
             recycleViewMain.layoutManager = LinearLayoutManager(applicationContext)
             recycleViewMain.adapter = adapter.withLoadStateFooter(LoadingStateAdapter())
-
-
             recycleViewMain.addItemDecoration(
                     DividerItemDecoration(
                             applicationContext,
                             resources.configuration.orientation
-                    )
-            )
-        }
-
-
-
-//        viewModel.searchUser(50,1,"a")
-//        viewModel.userResponse.observe({lifecycle})
-//        {
-//            it.let()
-//            {
-//                getUserData(it)
-//            } // it
-//        } // viewModel
+                    )  // DividerItemDecoration closed
+            ) // addItemDecoration closed
+        } // binding.apply closed
 
 
 
         viewModel.users.observe({lifecycle})
         {
             adapter.submitData(lifecycle,it)
-            Log.d(TAG, "onCreate: "+it)
-        }
-
-
-
+        } // userObserver closed
 
     } // onCreate closed
 
-    private fun getUserData(response: NetworkResponse<ApiResponse>?)
-    {
-        when(response)
-        {
-            is NetworkResponse.Success ->
-            {
-                hideProgressBar()
-                response.data?.data?.users.let()
-                {
-                  //  adapter.submitList(it)
-                } // response closed
-            } // is Success closed
-
-            is NetworkResponse.Error ->
-            {
-                hideProgressBar()
-                Toast.makeText(this,"No Internet Connection", Toast.LENGTH_SHORT).show()
-                Log.d(Constants.TAG, "requestApiData: "+response.message)
-            } /// is Error closed
-
-            is NetworkResponse.Loading ->
-            {
-                showProgressBar()
-            } // isLoading closing
-
-        } // when closed
-    } /// getUsersData closed
 
 
-    fun showProgressBar()
-    {
-        binding.progressBar.visibility = View.VISIBLE
-    } // showProgressBar
-
-    fun hideProgressBar()
-    {
-        binding.progressBar.visibility = View.GONE
-    } // showProgressBar
 
 
 } // class closed

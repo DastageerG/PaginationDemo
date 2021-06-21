@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.apitesting.data.model.User
 import com.example.apitesting.databinding.LayoutUsersListBinding
 
+
 class UserAdapter : PagingDataAdapter<User, UserAdapter.ViewHolder>
     (
 
@@ -23,7 +24,7 @@ class UserAdapter : PagingDataAdapter<User, UserAdapter.ViewHolder>
         {
             return oldItem.toString() == newItem.toString()
         }
-    }
+    } // object diffUtil closed
 )
 {
 

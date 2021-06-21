@@ -11,32 +11,10 @@ import com.example.testingapp.utils.Constants.USERS_PAGE_INDEX
 import retrofit2.HttpException
 import java.io.IOException
 
-class UserPagingSource(private val api:TestingApi,private val query:String?) : PagingSource<Int,User>()
+class UserPagingSource(private val api:TestingApi,private val query:String?=null) : PagingSource<Int,User>()
 {
 
 
-//    override suspend fun load(params: LoadParams<Int>): LoadResult<Int,User> {
-//
-//        val position = params.key ?: USERS_PAGE_INDEX
-//
-//        return try {
-//
-//            val response = api.searchUser(params.loadSize,position,query)
-//            val users = response.body()?.data?.users!!
-//
-//
-//
-//            LoadResult.Page(
-//                    data = users,
-//                    prevKey = if (position == USERS_PAGE_INDEX) null else position - 1,
-//                    nextKey = if (position == USERS_PAGE_INDEX) null else position + 1
-//            )
-//        } catch (exception: IOException) {
-//            LoadResult.Error(exception)
-//        } catch (e: HttpException) {
-//            LoadResult.Error(e)
-//        }
-//    }
     override fun getRefreshKey(state: PagingState<Int, User>): Int?
     {
         return  state.anchorPosition?.let ()
@@ -53,7 +31,7 @@ class UserPagingSource(private val api:TestingApi,private val query:String?) : P
 
         return try {
 
-            val response = api.searchUser(params.loadSize,page,query!!)
+            val response = api.getAllUsers(params.loadSize,page)
 
             LoadResult.Page(
                     data = response.body()?.data?.users!!,
@@ -62,18 +40,13 @@ class UserPagingSource(private val api:TestingApi,private val query:String?) : P
             )
 
 
-        } catch (e: Exception) {
+        } catch (e: Exception)
+        {
             LoadResult.Error(e)
-        }
+        } // catch closed
 
 
-    }
-
-
-
-
-
-
+    } // load closed
 
 
 

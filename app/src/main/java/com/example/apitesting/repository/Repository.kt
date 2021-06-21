@@ -21,18 +21,21 @@ import javax.inject.Singleton
 class Repository @Inject constructor(private val api: TestingApi)
 {
 
-    suspend fun searchUser(limit:Int,offset:Int,searchQuery:String) : Response<ApiResponse> =
-        api.searchUser(limit,offset,searchQuery)
-
-    suspend fun getAllUsers(limit:Int,offset:Int) : Response<ApiResponse> =
-        api.getAllUsers(limit,offset)
-
-
-    fun searchResults(query: String)=
-        Pager(PagingConfig(pageSize = 20))
+    /** This method is for searching a particular record
+     * searching is not implemented yet */
+    fun searchResults(query: String)
+    = Pager(PagingConfig(pageSize = 20))
         {
             UserPagingSource(api,query)
         }.liveData
+
+
+    //  it will return all the users
+    fun searchResults()
+            = Pager(PagingConfig(pageSize = 20))
+    {
+        UserPagingSource(api)
+    }.liveData
 
 
 
