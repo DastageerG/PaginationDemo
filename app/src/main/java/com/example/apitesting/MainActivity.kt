@@ -25,13 +25,13 @@ class MainActivity : AppCompatActivity() , SearchView.OnQueryTextListener
     private var _binding: ActivityMainBinding?=null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by viewModels()
-    private val adapter by lazy { UserAdapter() }
+    private  lateinit var adapter:UserAdapter
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        adapter = UserAdapter(this,binding.buttonContinue)
         setupRecyclerView(binding.recycleViewMain)
 
     } // onCreate closed
