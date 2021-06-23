@@ -21,9 +21,10 @@ import javax.inject.Singleton
 class Repository @Inject constructor(private val api: TestingApi)
 {
 
-    /** This method is for searching a particular record
-     * searching is not implemented yet */
-    fun searchResults(query: String)
+    /** This method is for searching  particular record
+     */
+
+    fun searchUsers(query: String)
     = Pager(PagingConfig(pageSize = 20))
         {
             UserPagingSource(api,query)
@@ -31,7 +32,7 @@ class Repository @Inject constructor(private val api: TestingApi)
 
 
     //  it will return all the users
-    fun searchResults()
+    fun getAllUsers()
             = Pager(PagingConfig(pageSize = 20))
     {
         UserPagingSource(api)

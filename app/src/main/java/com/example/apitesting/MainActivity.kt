@@ -3,23 +3,23 @@ package com.example.apitesting
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.apitesting.adapter.LoadingStateAdapter
 import com.example.apitesting.adapter.UserAdapter
-import com.example.apitesting.data.model.ApiResponse
 import com.example.apitesting.databinding.ActivityMainBinding
 import com.example.apitesting.viewModel.MainViewModel
-import com.example.testingapp.utils.Constants
 import com.example.testingapp.utils.Constants.TAG
-import com.example.testingapp.utils.NetworkResponse
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity()
+class MainActivity : AppCompatActivity() , SearchView.OnQueryTextListener
 {
 
     private var _binding: ActivityMainBinding?=null
@@ -32,31 +32,87 @@ class MainActivity : AppCompatActivity()
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupRecyclerView(binding.recycleViewMain)
+
+    } // onCreate closed
 
 
+    override fun onStart()
+    {
+        super.onStart()
+        showAllUsers()
+    } // onStart closed
 
-                binding.apply()
-        {
-
-            recycleViewMain.layoutManager = LinearLayoutManager(applicationContext)
-            recycleViewMain.adapter = adapter.withLoadStateFooter(LoadingStateAdapter())
-            recycleViewMain.addItemDecoration(
-                    DividerItemDecoration(
-                            applicationContext,
-                            resources.configuration.orientation
-                    )  // DividerItemDecoration closed
-            ) // addItemDecoration closed
-        } // binding.apply closed
-
-
-
-        viewModel.users.observe({lifecycle})
+    private fun showAllUsers()
+    {
+        viewModel.allUsers.observe({lifecycle})
         {
             adapter.submitData(lifecycle,it)
         } // userObserver closed
 
-    } // onCreate closed
+    } // showAllUsers closed
 
+
+    private fun setupRecyclerView(recycleViewMain: RecyclerView)
+    {
+        recycleViewMain.layoutManager = LinearLayoutManager(applicationContext)
+        recycleViewMain.adapter = adapter.withLoadStateFooter(LoadingStateAdapter())
+        recycleViewMain.addItemDecoration(
+                DividerItemDecoration(
+                        applicationContext,
+                        resources.configuration.orientation
+                )  // DividerItemDecoration closed
+        ) // addItemDecoration closed
+    } // setupRecyclerView closed
+
+
+    // Search Menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+
+        menuInflater.inflate(R.menu.menu_search,menu)
+
+        val menuItem = menu?.findItem(R.id.menuSearchUsers)
+        val searchView = menuItem?.actionView  as? SearchView
+
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+
+        return super.onCreateOptionsMenu(menu)
+
+    } // onCreate optionsMenu
+
+
+
+    override fun onQueryTextSubmit(query: String?): Boolean
+    {
+        if(query!=null)
+        {
+            searchUser(query)
+            Log.d(TAG, "onQueryTextSubmit: "+query)
+        }
+        return true
+    }
+
+    private fun searchUser(query: String)
+    {
+        viewModel.searchUsers(query)
+        viewModel.getSearchedUsers.observe({lifecycle})
+        {
+            adapter.submitData(lifecycle,it)
+        } // getSearchedUsers Observer closed
+
+    } // searchUser closed
+
+
+    override fun onQueryTextChange(newText: String): Boolean
+    {
+        if(newText.isEmpty())
+        {
+            showAllUsers()
+        } // if closed
+        return true
+    } // onQueryTextChange closed
 
 
 

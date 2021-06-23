@@ -1,7 +1,6 @@
 package com.example.apitesting.data.api
 
 import com.example.apitesting.data.model.ApiResponse
-import com.example.testingapp.utils.Constants
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -20,7 +19,7 @@ interface TestingApi
     : Response<ApiResponse>
 
 
-    // we will use it to show all users without query
+    // we show all the users in a paginatedResponse
     @GET("user/all")
     suspend fun getAllUsers
                 (
