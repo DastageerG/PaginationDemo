@@ -25,7 +25,7 @@ class Repository @Inject constructor(private val api: TestingApi)
      */
 
     fun searchUsers(query: String)
-    = Pager(PagingConfig(pageSize = 20))
+    = Pager(PagingConfig(pageSize = 10))
         {
             UserPagingSource(api,query)
         }.liveData

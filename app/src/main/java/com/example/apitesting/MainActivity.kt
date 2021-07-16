@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,11 @@ import com.example.apitesting.viewModel.MainViewModel
 import com.example.testingapp.utils.Constants.TAG
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@InternalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() , SearchView.OnQueryTextListener
 {
@@ -47,6 +52,12 @@ class MainActivity : AppCompatActivity() , SearchView.OnQueryTextListener
     {
         viewModel.allUsers.observe({lifecycle})
         {
+            lifecycleScope.launch{
+                adapter.loadStateFlow.collect {
+                    Log.d(TAG, "showAllUsers: "+adapter.itemCount)
+                }
+            }
+
             adapter.submitData(lifecycle,it)
         } // userObserver closed
 

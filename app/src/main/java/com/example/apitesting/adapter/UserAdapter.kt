@@ -39,10 +39,10 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
 {
 
     private var multiSelection = false
-    private var selectedUser = arrayListOf<User>()
-    private var selectedUsersPosition = arrayListOf<Int>()
-    private var myViewHolders = arrayListOf<ViewHolder>()
-    private lateinit var actionMode:ActionMode
+    private var selectedUser = arrayListOf<User>() // for applying selection
+    private var selectedUsersPosition = arrayListOf<Int>() // getting position for correct recyclerView visuals
+    private var myViewHolders = arrayListOf<ViewHolder>() // used for releasing
+    private lateinit var actionMode:ActionMode  // init actionMode and accessing it in the whole class
 
 
 
@@ -60,16 +60,18 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
         val user = getItem(position)
-        Log.d(TAG, "onBindViewHolder: "+position)
 
-        saveItemSelectionOnScroll(holder,position)
-        myViewHolders.add(holder)
+        saveItemSelectionOnScroll(holder,position)  // selection showed only on those which are selected
+
+        myViewHolders.add(holder) // add every holder so that we can later release it
 
         LayoutUsersListBinding.bind(holder.itemView).apply()
         {
             textViewLayoutUsersUserName.text = user?.username
         } // binding closed
 
+
+        /// simple click listener
         holder.itemView.setOnClickListener()
         {
             if(!multiSelection)
@@ -82,9 +84,7 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
             {
                 applySelection(holder,user!!,position)
             }
-
         } // onClick Listener closed
-
 
         buttonContinue.setOnClickListener()
         {
@@ -97,17 +97,14 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
 
                 multiSelection = false
                 selectedUser.clear()
+                selectedUsersPosition.clear()
                 actionMode.finish()
                 buttonContinue.isEnabled = false
         } // buttonContinue close
 
     } // onBindViewHolder closed
 
-
-    fun applyStatusBarColor(color:Int)
-    {
-        requireActivity.window.statusBarColor = ContextCompat.getColor(requireActivity,color)
-    } //
+    // this function is used to that recyclerView does not updates the view on its on which are not selected
 
     fun saveItemSelectionOnScroll(holder: ViewHolder,currentPosition:Int)
     {
@@ -119,8 +116,8 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
         {
             changeUserStyle(holder,R.color.white,R.color.black)
         } // else closed
-
     } // saveItemSelectionOnScroll closed
+
 
 
     fun applySelection(holder: ViewHolder,currentUser:User,position: Int)
@@ -158,14 +155,16 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
 
 
 
-    private fun applyActionModeTitle()
+    private fun applyActionModeTitle() // title = how many items selected
     {
         when(selectedUser.size)
         {
             0 ->
             {
                 actionMode.finish()
+                selectedUsersPosition.clear();
                 multiSelection = false
+                buttonContinue.isEnabled = false
             }
             1-> actionMode.title = "${selectedUser.size} item selected"
 
@@ -177,6 +176,12 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
     } // actionModeTitle closed
 
 
+    fun applyStatusBarColor(color:Int)
+    {
+        requireActivity.window.statusBarColor = ContextCompat.getColor(requireActivity,color)
+    } //
+
+        /** Contextual Action Mode Applied */
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean
     {
@@ -200,16 +205,19 @@ class UserAdapter(private val requireActivity:Activity, private val buttonContin
 
     override fun onDestroyActionMode(mode: ActionMode?)
     {
+        // clear before destroying
         multiSelection = false
         selectedUser.clear();
+        selectedUsersPosition.clear()
         applyStatusBarColor(R.color.purple_700)
+
+        // this is why we were adding viewholders in the list so that we can remove selections
         myViewHolders.forEach()
         {
             holder ->
             changeUserStyle(holder,R.color.white,R.color.black)
         } //
     } // onDestroyActionMode closed
-
 
 
 

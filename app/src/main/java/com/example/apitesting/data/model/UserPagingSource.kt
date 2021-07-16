@@ -15,7 +15,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-class UserPagingSource(private val api:TestingApi,private val query:String?=null) : PagingSource<Int,User>() , ActionMode.Callback
+class UserPagingSource(private val api:TestingApi,private val query:String?=null) : PagingSource<Int,User>()
 {
 
 
@@ -26,12 +26,12 @@ class UserPagingSource(private val api:TestingApi,private val query:String?=null
             val anchorPage = state.closestPageToPosition(it)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
-    }
+    } //
 
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
-        val page = params.key ?: 1
+        val page = params.key ?: 0
 
         return try {
 
@@ -50,8 +50,8 @@ class UserPagingSource(private val api:TestingApi,private val query:String?=null
 
             LoadResult.Page(
                     data = response.body()?.data?.users!!,
-                    prevKey = if (page == 1) null else page - 1,
-                    nextKey = if (response.body()?.data?.users?.isEmpty()!!) null else page + 1
+                    prevKey = if (page == 0) null else page - 10,
+                    nextKey = if (response.body()?.data?.users?.isEmpty()!!) null else page + 10
             )
 
 
@@ -63,25 +63,7 @@ class UserPagingSource(private val api:TestingApi,private val query:String?=null
 
     } // load closed
 
-    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean
-    {
-        TODO("Not yet implemented")
-    }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean
-    {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean
-    {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDestroyActionMode(mode: ActionMode?)
-    {
-        TODO("Not yet implemented")
-    }
 
 
 } // UserPagingSource
